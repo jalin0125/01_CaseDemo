@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>JS读取Excel演示</title>
+    <script src="static/xlsx.full.min.js"></script>
+</head>
+
+<body>
+<input type="file" onchange="readExcel(this)"/>
+<script>
+    function readExcel(file_obj) {
+        let reader = new FileReader();
+        let file = file_obj.files[0];
+        reader.readAsBinaryString(file);
+
+        reader.onload = function (e) {
+            let data = e.target.result;
+            let wb = XLSX.read(data, {type: 'binary'});
+
+            let sheetName = wb.SheetNames[0]   // 获取文档中第一个sheet页签的名字
+            let sheets = wb.Sheets[sheetName]   // 获sheet名页签下的数据
+
+            // console.log(sheets);   // 返回sheet对象到控制台
+            let jsonData = JSON.stringify(XLSX.utils.sheet_to_json(sheets)); // 将读取的 Excel 内容转化为 json 字符串
+            // let jsonData = XLSX.utils.sheet_to_json(sheets); // 将读取的 Excel 内容转化为 json 字符串
+            console.log(jsonData);
+        };
+    }
+</script>
+</body>
+
+</html>
